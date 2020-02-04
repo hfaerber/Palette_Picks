@@ -1,0 +1,26 @@
+{
+  "name": "palette_picks",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hfaerber/Palette_Picks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hfaerber/Palette_Picks/issues"
+  },
+  "homepage": "https://github.com/hfaerber/Palette_Picks#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "knex": "^0.20.8",
+    "pg": "^7.18.1"
+  }
+}
