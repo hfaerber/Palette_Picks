@@ -56,7 +56,7 @@ const createProject = async (knex, project) => {
       color_three: palette.color_three,
       color_four: palette.color_four,
       color_five: palette.color_five,
-      project_id: projectId[0]
+      projects_id: projectId[0]
     })
   });
 
