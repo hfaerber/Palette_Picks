@@ -34,6 +34,19 @@ app.get('/api/v1/palettes/:id', async (request, response) => {
   } catch (error) {
     response.status(500).json({ error })
   }
-})
+});
+
+app.post('/api/v1/projects', async (request, response) => {
+  const project = request.body;
+  if (!project.name) {
+    return response.status(422).json({error: 'Expected body format {name: <String>}. You\'re missing the required name property'});
+  }
+  try {
+    const id = await database('projects').insert(project, 'id');
+    response.status(201).json({ id: id[0] });
+  } catch (error) {
+      response.status(500).json({error});
+  }
+});
 
 module.exports = app;
