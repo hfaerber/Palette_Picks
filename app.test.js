@@ -125,6 +125,13 @@ describe('Server', () => {
       expect(result.name).toEqual(expectedProject.name);
     });
 
+    it('Should return a 404 status and an error message if the project is not found', async () => {
+      const response = await request(app).get('/api/v1/projects/-100');
+      const result = response.body;
+      expect(response.status).toBe(404);
+      expect(result).toEqual({Error: `No project found with an id of -100`});
+    });
+
   });
 
 });
