@@ -36,6 +36,30 @@ describe('Server', () => {
       const response = await request(app).get(`/api/v1/palettes/${invalidId}`);
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`);
+    });
+  });
+
+  describe('POST /api/v1/projects/:id/palettes', () => {
+    it('should return a 201 with the id of the newly created palette',
+      async () => {
+        const expectedProject = await database('projects').first();
+        const { id } = expectedProject;
+        const newPalette = {
+          name: 'new palette',
+          color_one: '#111111',
+          color_two: '#222222',
+          color_three: '#333333',
+          color_four: '#444444',
+          color_five: '#555555',
+          projects_id: id
+        };
+        const response = await request(app).post
+          (`/api/v1/projects/${id}/palettes`).send(newPalette);
+        const palettes = await database('palettes').where('id', response.body.id);
+        const palette = palettes[0];
+        expect(response.status).toBe(201);
+        expect(palette.name).toEqual(newPalette.name);
     })
   })
+
 })
