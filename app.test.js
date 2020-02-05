@@ -39,6 +39,23 @@ describe('Server', () => {
     });
   });
 
+  describe('POST /api/v1/projects', () => {
+    it('Should return a 201 status and the project id', async () => {
+      const newProject = {name: 'Test Project'};
+      const response = await request(app).post('/api/v1/projects').send(newProject);
+      const projects = await database('projects').where('id', response.body.id);
+      const project = projects[0];
+      expect(response.status).toBe(201);
+      expect(project.name).toEqual(newProject.name);
+    });
+
+    it('Should return a 422 status and an error message if a name property is not included in the request body', async () => {
+      const response = await request(app).post('/api/v1/projects').send({});
+      expect(response.status).toBe(422);
+      expect(response.body.error).toEqual('Expected body format {name: <String>}. You\'re missing the required name property');
+    });
+  });
+
   describe('POST /api/v1/projects/:id/palettes', () => {
     it('should return a 201 with the id of the newly created palette',
       async () => {
