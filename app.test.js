@@ -27,8 +27,6 @@ describe('Server', () => {
       const { id } = expectedPalette;
       const response = await request(app).get(`/api/v1/palettes/${id}`);
       const result = response.body;
-      // console.log('exp', expectedPalette);
-      // console.log('rb', response.body);
       expect(response.status).toBe(200);
       expect(result.name).toEqual(expectedPalette.name);
     });
