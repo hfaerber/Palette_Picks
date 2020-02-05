@@ -49,6 +49,13 @@ describe('Server', () => {
       expect(response.status).toBe(201);
       expect(project.name).toEqual(newProject.name);
     });
+
+    it('Should return a 422 status and an error message if a name property is not included in the request body', async () => {
+      const response = await request(app).post('/api/v1/projects').send({});
+      expect(response.status).toBe(422);
+      expect(response.body.error).toEqual('Expected body format {name: <String>}. You\'re missing the required name property');
+    });
+
   });
 
 });
