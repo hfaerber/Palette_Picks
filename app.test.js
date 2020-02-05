@@ -114,4 +114,15 @@ describe('Server', () => {
       expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`)
     });
   });
+
+  describe('DELETE /api/v1/projects/:id', () => {
+    it('should return a 200 with a success message if delete is successful', async () => {
+      const expectedProject = await database('projects').first();
+      const { id } = expectedProject;
+      const response = await request(app).delete(`/api/v1/projects/${id}`).send(`${id}`);
+      const doesExist = await database('projects').where('id', id);
+      expect(response.status).toBe(200);
+      expect(doesExist.length).toEqual(0);
+    });
+  });
 });
