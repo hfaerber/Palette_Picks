@@ -43,7 +43,7 @@ app.post('/api/v1/projects', async (request, response) => {
   }
   try {
     const id = await database('projects').insert(project, 'id');
-    response.status(201).json({ id });
+    response.status(201).json({ id: id[0] });
   } catch (error) {
       response.status(500).json({error});
   }
