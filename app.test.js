@@ -145,6 +145,13 @@ describe('Server', () => {
       expect(result.palettes[0].name).toEqual(expectedPalettes[0].name);
     });
 
+    it('Should return a 404 status and an error message', async () => {
+      const response = await request(app).get(`/api/v1/projects/-100/palettes`);
+      const result = response.body;
+      expect(response.status).toBe(404);
+      expect(result).toEqual({Error: `No palettes could be found matching a project with an id of -100`});
+    });
+
   });
 
 });
