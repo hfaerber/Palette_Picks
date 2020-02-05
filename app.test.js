@@ -31,6 +31,13 @@ describe('Server', () => {
       // console.log('rb', response.body);
       expect(response.status).toBe(200);
       expect(result.name).toEqual(expectedPalette.name);
+    });
+
+    it('should return a 404 if palette does not exist in DB', async () => {
+      const invalidId = -11;
+      const response = await request(app).get(`/api/v1/palettes/${invalidId}`);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`);
     })
   })
 })
