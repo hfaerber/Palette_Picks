@@ -57,4 +57,21 @@ app.post('/api/v1/projects/:id/palettes', async (request, response) => {
   }
 });
 
+app.delete('/api/v1/palettes/:id', async (request, response) => {
+  const palettes_id = request.params.id;
+  try {
+    const found = await database('palettes').where('id', palettes_id);
+    if (found.length) {
+      const id = await database('palettes').where('id', palettes_id).del();
+      response.status(200).send(`Palette with id ${palettes_id} has been removed successfully`);
+    } else {
+      response.status(404).json({
+        error: `Could not find palette with an id of ${palettes_id}`
+      })
+    }
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 module.exports = app;
