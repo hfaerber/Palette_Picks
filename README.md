@@ -24,3 +24,7 @@ Sample Response:
       projects_id: 91,
       created_at: '2020-02-05T01:49:59.421Z',
       updated_at: '2020-02-05T01:49:59.421Z' }`
+
+### POST `/api/v1/projects/:id/palettes`
+Sample Response:
+`{ id: 553 }`
