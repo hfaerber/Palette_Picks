@@ -79,4 +79,22 @@ describe('Server', () => {
         expect(response.body.error).toEqual('The expected format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You are missing a "name" property.')
     });
   });
+
+  describe('DELETE /api/v1/palettes/:id', () => {
+    it('should return a 200 with a success message if delete is successful', async () => {
+      const expectedPalette = await database('palettes').first();
+      const { id } = expectedPalette;
+      const response = await request(app).delete(`/api/v1/palettes/${id}`).send(`${id}`);
+      const doesExist = await database('palettes').where('id', id);
+      expect(response.status).toBe(200);
+      expect(doesExist.length).toEqual(0);
+    });
+
+    it('should return a 404 with a not found error message if item to delete does not exist', async () => {
+      const invalidId = -4;
+      const response = await request(app).delete(`/api/v1/palettes/${invalidId}`).send(`${invalidId}`);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`)
+    });
+  });
 });
