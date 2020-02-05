@@ -13,7 +13,6 @@ module.exports = {
     },
     useNullAsDefault: true
   },
-
   test: {
   client: 'pg',
   connection: 'postgres://localhost/projects_test',
@@ -25,7 +24,6 @@ module.exports = {
   },
   useNullAsDefault: true,
 },
-
   // staging: {
   //   client: 'postgresql',
   //   connection: {
