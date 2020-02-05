@@ -134,4 +134,17 @@ describe('Server', () => {
 
   });
 
+  describe('GET /api/v1/projects/:id/palettes', () => {
+
+    it('Should return a 200 status and an array of palettes', async () => {
+      const { projects_id } = await database('palettes').first();
+      const expectedPalettes = await database('palettes').where('projects_id', projects_id);
+      const response = await request(app).get(`/api/v1/projects/${projects_id}/palettes`);
+      const result = response.body;
+      expect(response.status).toBe(200);
+      expect(result.palettes[0].name).toEqual(expectedPalettes[0].name);
+    });
+
+  });
+
 });
