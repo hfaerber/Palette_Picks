@@ -26,7 +26,7 @@ describe('Server', () => {
       const expectedPalette = await database('palettes').first();
       const { id } = expectedPalette;
       const response = await request(app).get(`/api/v1/palettes/${id}`);
-      const result = response.body[0];
+      const result = response.body;
       // console.log('exp', expectedPalette);
       // console.log('rb', response.body);
       expect(response.status).toBe(200);

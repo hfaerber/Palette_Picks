@@ -20,6 +20,19 @@ app.get('/api/v1/projects', async (request, response) => {
   } catch (error) {
     response.status(500).json({error})
   }
+});
+
+app.get('/api/v1/palettes/:id', async (request, response) => {
+  const { id } = request.params;
+
+  try {
+    const palettes = await database('palettes').where('id', id);
+    if (palettes.length) {
+      response.status(200).json(palettes[0])
+    }
+  } catch (error) {
+    response.status(500).json({ error })
+  }
 })
 
 module.exports = app;
