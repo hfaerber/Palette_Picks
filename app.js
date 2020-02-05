@@ -46,7 +46,7 @@ app.post('/api/v1/projects/:id/palettes', async (request, response) => {
     if (!palette.hasOwnProperty(requiredParameter)) {
       return response
         .status(422)
-        .send({ error: `The expected format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You are missing a "${requiredParameter}" property.` })
+        .send({ error: `Expected body format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You\'re missing the required "${requiredParameter}" property.` })
     }
   }
   try {

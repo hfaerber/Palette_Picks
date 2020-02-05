@@ -76,7 +76,7 @@ describe('Server', () => {
         const response = await request(app).post
           (`/api/v1/projects/${id}/palettes`).send(newPalette);
         expect(response.status).toBe(422);
-        expect(response.body.error).toEqual('The expected format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You are missing a "name" property.')
+        expect(response.body.error).toEqual('Expected body format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You\'re missing the required "name" property.')
     });
   });
 
