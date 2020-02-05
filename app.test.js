@@ -59,7 +59,24 @@ describe('Server', () => {
         const palette = palettes[0];
         expect(response.status).toBe(201);
         expect(palette.name).toEqual(newPalette.name);
-    })
-  })
+    });
 
-})
+    it('should return a 422 if properties are missing from request body',
+      async () => {
+        const expectedProject = await database('projects').first();
+        const { id } = expectedProject;
+        const newPalette = {
+          color_one: '#111111',
+          color_two: '#222222',
+          color_three: '#333333',
+          color_four: '#444444',
+          color_five: '#555555',
+          projects_id: id
+        };
+        const response = await request(app).post
+          (`/api/v1/projects/${id}/palettes`).send(newPalette);
+        expect(response.status).toBe(422);
+        expect(response.body.error).toEqual('The expected format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You are missing a "name" property.')
+    });
+  });
+});
