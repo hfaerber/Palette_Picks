@@ -114,4 +114,17 @@ describe('Server', () => {
       expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`)
     });
   });
+  describe('GET /api/v1/projects/:id', () => {
+
+    it('Should return a 200 status and a project object', async () => {
+      const expectedProject = await database('projects').first();
+      const { id } = expectedProject;
+      const response = await request(app).get(`/api/v1/projects/${id}`);
+      const result = response.body;
+      expect(response.status).toBe(200);
+      expect(result.name).toEqual(expectedProject.name);
+    });
+
+  });
+
 });

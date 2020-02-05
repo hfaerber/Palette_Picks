@@ -92,7 +92,7 @@ app.get('/api/v1/projects/:id', async (request, response) => {
   try {
     const projects = await database('projects').where('id', id);
     return projects.length ?
-    response.status(200).json({projects}) :
+    response.status(200).json(projects[0]) :
     response.status(404).json({Error: `No project found with an id of ${id}`})
   } catch (error) {
     response.status(500).json({error});
