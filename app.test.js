@@ -124,5 +124,12 @@ describe('Server', () => {
       expect(response.status).toBe(200);
       expect(doesExist.length).toEqual(0);
     });
+
+    it('should return a 404 with a not found error message if item to delete does not exist', async () => {
+      const invalidId = -5;
+      const response = await request(app).delete(`/api/v1/projects/${invalidId}`).send(`${invalidId}`);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
+    });
   });
 });
