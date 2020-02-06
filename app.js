@@ -87,4 +87,23 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
   }
 });
 
+app.delete('/api/v1/projects/:id', async (request, response) => {
+  const projects_id = request.params.id;
+  try {
+    const found = await database('projects').where('id', projects_id);
+    if (found.length) {
+      const p_id = await database('palettes').where('projects_id', projects_id).del();
+
+      const id = await database('projects').where('id', projects_id).del();
+      response.status(200).send(`Project with id ${projects_id} has been removed successfully`);
+    } else {
+      response.status(404).json({
+        error: `Could not find project with an id of ${projects_id}`
+      })
+    }
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
+
 module.exports = app;
