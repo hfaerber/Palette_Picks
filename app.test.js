@@ -132,4 +132,31 @@ describe('Server', () => {
       expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
     });
   });
+
+  describe('PATCH /api/v1/projects/:id', () => {
+    it('should return a 200 with a success message when project name is updated', async () => {
+      const correctionBody = { name: 'Updated Project Name' };
+      const expectedProject = await database('projects').first();
+      const { id } = expectedProject;
+      const response = await request(app).patch(`/api/v1/projects/${id}`).send(correctionBody);
+      console.log('response', response.body);
+      const updatedProject = await database('projects').where('id', id);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toEqual(id);
+      expect(updatedProject[0].name).toEqual(correctionBody.name);
+    });
+
+    it('should return a 404 with a not found error message if item to update does not exist', async () => {
+      const correctionBody = { name: 'Updated Project Name' };
+      const invalidId = -6;
+      const response = await request(app).patch(`/api/v1/projects/${invalidId}`).send(correctionBody);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
+    });
+
+    // it('should return a 422 with an error message if info to update is invalid', async () => {
+    //
+    // });
+  });
+
 });

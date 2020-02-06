@@ -75,7 +75,7 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
   try {
     const found = await database('palettes').where('id', palettes_id);
     if (found.length) {
-      const id = await database('palettes').where('id', palettes_id).del();
+      await database('palettes').where('id', palettes_id).del();
       response.status(200).send(`Palette with id ${palettes_id} has been removed successfully`);
     } else {
       response.status(404).json({
@@ -90,11 +90,10 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
 app.delete('/api/v1/projects/:id', async (request, response) => {
   const projects_id = request.params.id;
   try {
-    const found = await database('projects').where('id', projects_id);
-    if (found.length) {
-      const p_id = await database('palettes').where('projects_id', projects_id).del();
-
-      const id = await database('projects').where('id', projects_id).del();
+    const foundProject = await database('projects').where('id', projects_id);
+    if (foundProject.length) {
+      await database('palettes').where('projects_id', projects_id).del();
+      await database('projects').where('id', projects_id).del();
       response.status(200).send(`Project with id ${projects_id} has been removed successfully`);
     } else {
       response.status(404).json({
@@ -105,5 +104,27 @@ app.delete('/api/v1/projects/:id', async (request, response) => {
     response.status(500).json({ error });
   }
 });
+
+app.patch('/api/v1/projects/:id', async (request, response) => {
+  const updatedInfo = request.body;
+  const projects_id = request.params.id;
+  const foundProject = await database('projects').where('id', projects_id);
+
+  // if (!foundProject) <set up 422 to ensure key sent in request.body exists in project
+
+  try {
+    if (foundProject.length) {
+      const id = await database('projects').where('id', projects_id).update(updatedInfo, 'id');
+      // response.status(200).json({`Project with id ${projects_id} has been updated successfully`});
+      response.status(200).json({ id: id[0] });
+    } else {
+      response.status(404).json({
+        error: `Could not find project with an id of ${projects_id}`
+      })
+    }
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+})
 
 module.exports = app;
