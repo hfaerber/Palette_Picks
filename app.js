@@ -109,8 +109,13 @@ app.patch('/api/v1/projects/:id', async (request, response) => {
   const updatedInfo = request.body;
   const projects_id = request.params.id;
   const foundProject = await database('projects').where('id', projects_id);
+  let requestKeys = Object.keys(updatedInfo);
 
-  // if (!foundProject) <set up 422 to ensure key sent in request.body exists in project
+  if (requestKeys.length !== 1 || requestKeys[0] !== 'name') {
+    return response
+      .status(422)
+      .send({ error: `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
+  }
 
   try {
     if (foundProject.length) {
