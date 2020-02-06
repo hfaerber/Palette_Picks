@@ -139,7 +139,6 @@ describe('Server', () => {
       const expectedProject = await database('projects').first();
       const { id } = expectedProject;
       const response = await request(app).patch(`/api/v1/projects/${id}`).send(correctionBody);
-      console.log('response', response.body);
       const updatedProject = await database('projects').where('id', id);
       expect(response.status).toBe(200);
       expect(response.body.id).toEqual(id);
@@ -154,9 +153,14 @@ describe('Server', () => {
       expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
     });
 
-    // it('should return a 422 with an error message if info to update is invalid', async () => {
-    //
-    // });
+    it('should return a 422 with an error message if info to update is invalid property', async () => {
+      const correctionBody = { id: 'Updated Project Name' };
+      const expectedProject = await database('projects').first();
+      const { id } = expectedProject;
+      const response = await request(app).patch(`/api/v1/projects/${id}`).send(correctionBody);
+      expect(response.status).toBe(422);
+      expect(response.body.error).toEqual('Expected body format is: { name: <String> }. You must send only the required "name" property.');
+    });
   });
 
 });
