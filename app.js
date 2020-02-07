@@ -134,7 +134,7 @@ app.patch('/api/v1/projects/:id', async (request, response) => {
 
 app.patch('/api/v1/palettes/:id', async (request, response) => {
   const updatedInfo = request.body;
-  const palettes_id = request.param.id;
+  const palettes_id = request.params.id;
   const foundPalette = await database('palettes').where('id', palettes_id);
   let requestKeys = Object.keys(updatedInfo);
 
@@ -143,7 +143,6 @@ app.patch('/api/v1/palettes/:id', async (request, response) => {
       .status(422)
       .send({ error: `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
   }
-
   try {
     if (foundPalette.length) {
       const id = await database('palettes').where('id', palettes_id).update(updatedInfo, 'id');
