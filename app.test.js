@@ -181,8 +181,16 @@ describe('Server', () => {
       const response = await request(app).patch(`/api/v1/palettes/${invalidId}`).send(correctionBody);
       expect(request.status).toBe(404);
       expect(request.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
-    })
-  });
+    });
 
+    it('should return a 422 with an error message if info to update is invalid property', async () => {
+      const correctionBody = { color_one: 'New and improved palette name' };
+      const expectedPalette = await database('palettes').first();
+      const { id } = expectedPalette;
+      const response = await request(app).patch(`/api/v1/palettes/${id}`).send(correctionBody);
+      expect(response.status).toBe(422);
+      expect(response.body.error).toEqual('Expected body format is: { name: <String> }. You must send only the required "name" property.');
+    });
+  });
 
 });
