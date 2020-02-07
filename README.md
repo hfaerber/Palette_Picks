@@ -28,3 +28,15 @@ Sample Response:
 ### POST `/api/v1/projects/:id/palettes`
 Sample Response:
 `{ id: 553 }`
+
+### POST `/api/v1/projects`
+Sample Response:
+
+
+### PATCH `/api/v1/projects/:id`
+
+### PATCH `/api/v1/palettes/:id`
+
+### DELETE `/api/v1/projects/:id`
+
+### DELETE `/api/v1/palettes/:id`
