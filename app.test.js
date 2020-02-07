@@ -163,4 +163,17 @@ describe('Server', () => {
     });
   });
 
+  describe('PATCH /api/v1/palettes/:id', () => {
+    it('should return a 200 with a success message when palette name is updated', async () => {
+      const correctionBody = { name: 'New and improved palette name' };
+      const expectedPalette = await database('palettes').first();
+      const { id } = expectedPalette;
+      const response = await request(app).patch(`/api/v1/palettes/${id}`).send(correctionBody);
+      const updatedPalette = await database('palettes').where('id', id);
+      expect(response.status).toBe(200);
+      expect(response.body.id).toEqual(id);
+      expect(updatedPalette[0].name).toEqual(correctionBody.name);
+    });
+  });
+
 });
