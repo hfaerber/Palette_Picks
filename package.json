@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "jest --watchAll"
+    "start": "node server.js",
+    "test": "NODE_ENV=test jest --forceExit"
   },
   "repository": {
     "type": "git",
