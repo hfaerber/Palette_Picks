@@ -1,11 +1,17 @@
 language: node_js
 node_js:
-  - "node"
+- node
 services:
-  - postgresql
+- postgresql
 before_script:
-  - psql -c 'CREATE DATABASE projects_test;' -U postgres
-  - knex migrate:latest --env=test
-  - knex seed:run --env=test
+- psql -c 'CREATE DATABASE projects_test;' -U postgres
+- knex migrate:latest --env=test
+- knex seed:run --env=test
 notifications:
   email: false
+deploy:
+  provider: heroku
+  api_key:
+    secure: 3LtxoeWl/wMa58vp4fE2Ojw8LloEMslYvjam21SsPCUoKoyH/U8LC2vpDvTaOET+JKcz++W4OlAS0uSbV3t4sk5+OwK2/vTdDWuBroF3I4x0Hjig6ogMtlFEMUfqgyhkYBVIDmaTa9zY8ucZ2KlTvyNxhZio9DEVzk9fkMjvyiIY7zZ8th9Ky2ZRpKQSDsjm21T3c/BXuEBnNvNaTiM7lZ7Rrnhg+AzrRYOsoFs12dIJeZY86QHej3P5Qjoia131R9EvqxoySA/wikCNVjetNDXjOU5yNyydEVv1aP6ErU754/kYyLM0/a8ywHR2fNaAfLCtzHws0bj60kCdanOFebZA0LwdGL0/yq9lOrddCxMg0VbwKCZcUMf1ksLnm+sTDkIqtgzZsLAgBS4GcfFqZgv4IPwpIKdFTxetRKrfw9wmt5OK/a57cZlb9wEJnszsFdWPfXEFYeWbCllZ4eQFrQBxYE7weOt2Y5MUNeJ0ewc9lgJPSEueuTWR6T9mKkEUNF++nQELUWimyOkr/+SPjxXBQVVBesoc6VRPPaLZiOpGZuLXWNHghcjoOD4BMhdGYMMXEtn+E2za709MbkTge8SpFFwpq2gTnMz5NU981/cnLaNPaKNFKN8ahLrPFdDnhZEbJ2eFz4UL9YCsrZBf2Aj1IAoPMRLLDWa3uTLml28=
+  app: palette-picks
+skip_cleanup: true
