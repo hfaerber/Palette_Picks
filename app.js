@@ -130,6 +130,32 @@ app.patch('/api/v1/projects/:id', async (request, response) => {
   } catch (error) {
     response.status(500).json({ error });
   }
-})
+});
+
+app.patch('/api/v1/palettes/:id', async (request, response) => {
+  const updatedInfo = request.body;
+  const palettes_id = request.param.id;
+  const foundPalette = await database('palettes').where('id', palettes_id);
+  let requestKeys = Object.keys(updatedInfo);
+
+  if (requestKeys.length !== 1 || requestKeys[0] !== 'name') {
+    return response
+      .status(422)
+      .send({ error: `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
+  }
+
+  try {
+    if (foundPalette.length) {
+      const id = await database('palettes').where('id', palettes_id).update(updatedInfo, 'id');
+      response.status(200).json({ id: id[0] });
+    } else {
+      response.status(404).json({
+        error: `Could not find palette with an id of ${palettes_id}`
+      })
+    }
+  } catch (error) {
+    response.status(500).json({ error });
+  }
+});
 
 module.exports = app;

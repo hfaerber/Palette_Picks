@@ -179,8 +179,8 @@ describe('Server', () => {
       const correctionBody = { name: 'New and improved palette name' };
       const invalidId = -7;
       const response = await request(app).patch(`/api/v1/palettes/${invalidId}`).send(correctionBody);
-      expect(request.status).toBe(404);
-      expect(request.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`);
     });
 
     it('should return a 422 with an error message if info to update is invalid property', async () => {
