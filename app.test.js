@@ -174,6 +174,15 @@ describe('Server', () => {
       expect(response.body.id).toEqual(id);
       expect(updatedPalette[0].name).toEqual(correctionBody.name);
     });
+
+    it('should return a 404 with a not found message if palette to update does not exist', async () => {
+      const correctionBody = { name: 'New and improved palette name' };
+      const invalidId = -7;
+      const response = await request(app).patch(`/api/v1/palettes/${invalidId}`).send(correctionBody);
+      expect(request.status).toBe(404);
+      expect(request.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
+    })
   });
+
 
 });
