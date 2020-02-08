@@ -21,21 +21,21 @@ describe('Server', () => {
     });
   });
 
-  describe('GET /api/v1/palettes/:id', () => {
-    it('should return a 200 and single palette', async () => {
-      const expectedPalette = await database('palettes').first();
-      const { id } = expectedPalette;
-      const response = await request(app).get(`/api/v1/palettes/${id}`);
+  describe('GET /api/v1/projects/:id/palettes', () => {
+    it('Should return a 200 status and an array of palettes', async () => {
+      const { projects_id } = await database('palettes').first();
+      const expectedPalettes = await database('palettes').where('projects_id', projects_id);
+      const response = await request(app).get(`/api/v1/projects/${projects_id}/palettes`);
       const result = response.body;
       expect(response.status).toBe(200);
-      expect(result.name).toEqual(expectedPalette.name);
+      expect(result.palettes[0].name).toEqual(expectedPalettes[0].name);
     });
 
-    it('should return a 404 if palette does not exist in DB', async () => {
-      const invalidId = -11;
-      const response = await request(app).get(`/api/v1/palettes/${invalidId}`);
+    it('Should return a 404 status and an error message', async () => {
+      const response = await request(app).get(`/api/v1/projects/-100/palettes`);
+      const result = response.body;
       expect(response.status).toBe(404);
-      expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`);
+      expect(result).toEqual({Error: `No palettes could be found matching a project with an id of -100`});
     });
   });
 
@@ -57,21 +57,21 @@ describe('Server', () => {
     });
   });
 
-  describe('GET /api/v1/projects/:id/palettes', () => {
-    it('Should return a 200 status and an array of palettes', async () => {
-      const { projects_id } = await database('palettes').first();
-      const expectedPalettes = await database('palettes').where('projects_id', projects_id);
-      const response = await request(app).get(`/api/v1/projects/${projects_id}/palettes`);
+  describe('GET /api/v1/palettes/:id', () => {
+    it('should return a 200 and single palette', async () => {
+      const expectedPalette = await database('palettes').first();
+      const { id } = expectedPalette;
+      const response = await request(app).get(`/api/v1/palettes/${id}`);
       const result = response.body;
       expect(response.status).toBe(200);
-      expect(result.palettes[0].name).toEqual(expectedPalettes[0].name);
+      expect(result.name).toEqual(expectedPalette.name);
     });
 
-    it('Should return a 404 status and an error message', async () => {
-      const response = await request(app).get(`/api/v1/projects/-100/palettes`);
-      const result = response.body;
+    it('should return a 404 if palette does not exist in DB', async () => {
+      const invalidId = -11;
+      const response = await request(app).get(`/api/v1/palettes/${invalidId}`);
       expect(response.status).toBe(404);
-      expect(result).toEqual({Error: `No palettes could be found matching a project with an id of -100`});
+      expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`);
     });
   });
 
@@ -133,6 +133,25 @@ describe('Server', () => {
     });
   });
 
+  describe('DELETE /api/v1/projects/:id', () => {
+    it('should return a 200 with a success message if delete is successful', async () => {
+      const expectedProject = await database('projects').first();
+      const { id } = expectedProject;
+      const response = await request(app).delete(`/api/v1/projects/${id}`).send(`${id}`);
+      const doesExist = await database('projects').where('id', id);
+      console.log('del prj', response.text)
+      expect(response.status).toBe(200);
+      expect(doesExist.length).toEqual(0);
+    });
+
+    it('should return a 404 with a not found error message if item to delete does not exist', async () => {
+      const invalidId = -5;
+      const response = await request(app).delete(`/api/v1/projects/${invalidId}`).send(`${invalidId}`);
+      expect(response.status).toBe(404);
+      expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
+    });
+  });
+
   describe('DELETE /api/v1/palettes/:id', () => {
     it('should return a 200 with a success message if delete is successful', async () => {
       const expectedPalette = await database('palettes').first();
@@ -148,24 +167,6 @@ describe('Server', () => {
       const response = await request(app).delete(`/api/v1/palettes/${invalidId}`).send(`${invalidId}`);
       expect(response.status).toBe(404);
       expect(response.body.error).toEqual(`Could not find palette with an id of ${invalidId}`)
-    });
-  });
-
-  describe('DELETE /api/v1/projects/:id', () => {
-    it('should return a 200 with a success message if delete is successful', async () => {
-      const expectedProject = await database('projects').first();
-      const { id } = expectedProject;
-      const response = await request(app).delete(`/api/v1/projects/${id}`).send(`${id}`);
-      const doesExist = await database('projects').where('id', id);
-      expect(response.status).toBe(200);
-      expect(doesExist.length).toEqual(0);
-    });
-
-    it('should return a 404 with a not found error message if item to delete does not exist', async () => {
-      const invalidId = -5;
-      const response = await request(app).delete(`/api/v1/projects/${invalidId}`).send(`${invalidId}`);
-      expect(response.status).toBe(404);
-      expect(response.body.error).toEqual(`Could not find project with an id of ${invalidId}`);
     });
   });
 
