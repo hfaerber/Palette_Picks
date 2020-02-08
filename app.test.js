@@ -103,8 +103,7 @@ describe('Server', () => {
           color_two: '#222222',
           color_three: '#333333',
           color_four: '#444444',
-          color_five: '#555555',
-          projects_id: id
+          color_five: '#555555'
         };
         const response = await request(app).post
           (`/api/v1/projects/${id}/palettes`).send(newPalette);
@@ -139,7 +138,6 @@ describe('Server', () => {
       const { id } = expectedProject;
       const response = await request(app).delete(`/api/v1/projects/${id}`).send(`${id}`);
       const doesExist = await database('projects').where('id', id);
-      console.log('del prj', response.text)
       expect(response.status).toBe(200);
       expect(doesExist.length).toEqual(0);
     });
