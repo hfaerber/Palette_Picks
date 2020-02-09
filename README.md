@@ -1,3 +1,13 @@
+# Palette Picks
+## Mod 4 Paired Project
+### Dev Team
+[Cameron McCrae](https://github.com/cammac60)  
+[Heather Faerber](https://github.com/hfaerber)  
+
+This back end application provides a RESTful API server with endpoints to allow data retrieval, removal, and manipulation.
+
+This server is used in our front end application [Palette Picker](https://github.com/hfaerber/Palette_Picker).  Here, users can create projects and color palettes that can be added, removed and updated using this back end server.
+
 ## Setup
 - Clone this repo and run npm install
 - Run the server by using npm start
