@@ -139,6 +139,7 @@ describe('Server', () => {
       const response = await request(app).delete(`/api/v1/projects/${id}`).send(`${id}`);
       const doesExist = await database('projects').where('id', id);
       expect(response.status).toBe(200);
+      expect(response.body).toEqual(`Project with id ${id} has been removed successfully`);
       expect(doesExist.length).toEqual(0);
     });
 
@@ -157,6 +158,7 @@ describe('Server', () => {
       const response = await request(app).delete(`/api/v1/palettes/${id}`).send(`${id}`);
       const doesExist = await database('palettes').where('id', id);
       expect(response.status).toBe(200);
+      expect(response.body).toEqual(`Palette with id ${id} has been removed successfully`)
       expect(doesExist.length).toEqual(0);
     });
 

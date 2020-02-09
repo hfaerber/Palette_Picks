@@ -28,7 +28,8 @@ app.get('/api/v1/projects/:id/palettes', async (request, response) => {
     const palettes = await database('palettes').where('projects_id', id);
     return palettes.length ?
     response.status(200).json({palettes}) :
-    response.status(404).json({Error: `No palettes could be found matching a project with an id of ${id}`});
+    response.status(404).json({Error:
+      `No palettes could be found matching a project with an id of ${id}`});
   } catch(error) {
     response.status(500).json({error});
   }
@@ -64,7 +65,8 @@ app.get('/api/v1/palettes/:id', async (request, response) => {
 app.post('/api/v1/projects', async (request, response) => {
   const project = request.body;
   if (!project.name) {
-    return response.status(422).json({error: 'Expected body format {name: <String>}. You\'re missing the required name property'});
+    return response.status(422).json({error:
+      'Expected body format {name: <String>}. You\'re missing the required name property'});
   }
   try {
     const id = await database('projects').insert(project, 'id');
@@ -81,9 +83,8 @@ app.post('/api/v1/projects/:id/palettes', async (request, response) => {
   for (let requiredParameter of ['name', 'color_one', 'color_two',
     'color_three', 'color_four', 'color_five', 'projects_id']) {
     if (!palette.hasOwnProperty(requiredParameter)) {
-      return response
-        .status(422)
-        .send({ error: `Expected body format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You\'re missing the required "${requiredParameter}" property.` })
+      return response.status(422).json({ error:
+        `Expected body format is: { name: <String>, color_one: <String>, color_two: <String>, color_three: <String>, color_four: <String>, color_five: <String> }. You\'re missing the required "${requiredParameter}" property.` })
     }
   }
   try {
@@ -101,7 +102,8 @@ app.delete('/api/v1/projects/:id', async (request, response) => {
     if (foundProject.length) {
       await database('palettes').where('projects_id', projects_id).del();
       await database('projects').where('id', projects_id).del();
-      response.status(200).send(`Project with id ${projects_id} has been removed successfully`);
+      response.status(200).json(
+        `Project with id ${projects_id} has been removed successfully`);
     } else {
       response.status(404).json({
         error: `Could not find project with an id of ${projects_id}`
@@ -118,7 +120,8 @@ app.delete('/api/v1/palettes/:id', async (request, response) => {
     const found = await database('palettes').where('id', palettes_id);
     if (found.length) {
       await database('palettes').where('id', palettes_id).del();
-      response.status(200).send(`Palette with id ${palettes_id} has been removed successfully`);
+      response.status(200).json(
+        `Palette with id ${palettes_id} has been removed successfully`);
     } else {
       response.status(404).json({
         error: `Could not find palette with an id of ${palettes_id}`
@@ -136,13 +139,13 @@ app.patch('/api/v1/projects/:id', async (request, response) => {
   let requestKeys = Object.keys(updatedInfo);
 
   if (requestKeys.length !== 1 || requestKeys[0] !== 'name') {
-    return response
-      .status(422)
-      .send({ error: `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
+    return response.status(422).json({ error:
+      `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
   }
   try {
     if (foundProject.length) {
-      const id = await database('projects').where('id', projects_id).update(updatedInfo, 'id');
+      const id = await database('projects')
+        .where('id', projects_id).update(updatedInfo, 'id');
       // response.status(200).json({`Project with id ${projects_id} has been updated successfully`});
       response.status(200).json({ id: id[0] });
     } else {
@@ -164,11 +167,13 @@ app.patch('/api/v1/palettes/:id', async (request, response) => {
   if (requestKeys.length !== 1 || requestKeys[0] !== 'name') {
     return response
       .status(422)
-      .send({ error: `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
+      .send({ error:
+        `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
   }
   try {
     if (foundPalette.length) {
-      const id = await database('palettes').where('id', palettes_id).update(updatedInfo, 'id');
+      const id = await database('palettes')
+        .where('id', palettes_id).update(updatedInfo, 'id');
       response.status(200).json({ id: id[0] });
     } else {
       response.status(404).json({
@@ -179,5 +184,8 @@ app.patch('/api/v1/palettes/:id', async (request, response) => {
     response.status(500).json({ error });
   }
 });
+
+// custom endpoint
+
 
 module.exports = app;
