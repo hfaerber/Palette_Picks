@@ -1,7 +1,7 @@
 # Palette Picks
 ## Mod 4 Paired Project
 ### Dev Team
-[Cameron McCrae](https://github.com/cammac60)  
+[Cameron MacRae](https://github.com/cammac60)  
 [Heather Faerber](https://github.com/hfaerber)  
 
 This back end application provides a RESTful API server with endpoints to allow data retrieval, removal, and manipulation.
