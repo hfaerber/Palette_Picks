@@ -229,4 +229,73 @@ describe('Server', () => {
       expect(response.body.error).toEqual('Expected body format is: { name: <String> }. You must send only the required "name" property.');
     });
   });
+
+  describe('GET /api/v1/palettes with color query option', () => {
+      it('should return a 200 with all palettes if no color is queried', async() => {
+        const expectedPalettes = await database('palettes').select();
+        const response = await request(app).get('/api/v1/palettes');
+        const palettes = response.body;
+        expect(response.status).toBe(200);
+        expect(palettes.palettes[0].name).toEqual(expectedPalettes[0].name);
+        expect(palettes.palettes[palettes.palettes.length-1].name).toEqual(expectedPalettes[expectedPalettes.length-1].name);
+      });
+
+      it('should return a 200 with all palettes that include the queried hex code', async () => {
+        // Set up DB with two palettes that meet query
+        const whitePaletteOne = {
+          name: 'new palette one',
+          color_one: '#111111',
+          color_two: '#FFFFFF',
+          color_three: '#333333',
+          color_four: '#444444',
+          color_five: '#555555'
+        };
+        const whitePaletteTwo = {
+          name: 'new palette two',
+          color_one: '#111111',
+          color_two: '#222222',
+          color_three: '#333333',
+          color_four: '#444444',
+          color_five: '#FFFFFF'
+        };
+        const expectedProject = await database('projects').first();
+        const { id } = expectedProject;
+        const postOne = await request(app).post(`/api/v1/projects/${id}/palettes`).send(whitePaletteOne);
+        const postTwo = await request(app).post(`/api/v1/projects/${id}/palettes`).send(whitePaletteTwo);
+        const colorQuery = '?color=FFFFFF';
+        const expectedResponse = { palettes: [
+          {
+            name: 'new palette one',
+            color_one: '#111111',
+            color_two: '#FFFFFF',
+            color_three: '#333333',
+            color_four: '#444444',
+            color_five: '#555555',
+            project_id: `${id}`
+          },
+          {
+            name: 'new palette two',
+            color_one: '#111111',
+            color_two: '#222222',
+            color_three: '#333333',
+            color_four: '#444444',
+            color_five: '#FFFFFF',
+            project_id: `${id}`
+          }
+        ]};
+        const response = await request(app).get(`/api/v1/palettes${colorQuery}`);
+        const queriedPalettes = response.body;
+        expect(response.status).toBe(200);
+        expect(queriedPalettes.palettes[0].name).toEqual(expectedResponse.palettes[0].name);
+        expect(queriedPalettes.palettes[1].name).toEqual(expectedResponse.palettes[1].name);
+      });
+
+      it('should return a 422 with error message if color query is not properly formatted', async () => {
+        const colorQuery = '?color=EEEEE';
+        const response = await request(app).get(`/api/v1/palettes${colorQuery}`);
+        expect(response.status).toBe(422);
+        expect(response.body.error).toEqual('Expected query format is: "?color=" + <6 character hex code>.  Do not include "#" before the hex characters.')
+      });
+  });
+
 });
