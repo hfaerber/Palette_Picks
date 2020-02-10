@@ -22,6 +22,8 @@ The server will run on `http://localhost:3000`.
 |----|----|----|----|----|
 | Get all projects |`/api/v1/projects`| GET | N/A | `{projects: [{}, {}, ...]}`   [See example](#all_projects) |
 | Get all palettes for a given project |`/api/v1/projects/:id/palettes`| GET | N/A | `{palettes: [{}, {}, ...]}` [See example](#all_palettes_by_project) |
+| Get all palettes (any project) |`/api/v1/palettes`| GET | N/A | `{palettes: [{}, {}, ...]}` [See example](#all_palettes_total) |
+| Get all palettes with queried color |`/api/v1/projects/:id/palettes?color=:hexcharacters`| GET | N/A | `{palettes: [{}, {}, ...]}` [See example](#all_palettes_by_query) |
 | Get specific project |`/api/v1/projects/:id`| GET | N/A | `{}`    [See example](#one_project) |
 | Get specific palette |`/api/v1/palettes/:id`| GET | N/A | `{}`  [See example](#one_palette) |
 | Post a project |`/api/v1/projects`| POST | `{ name: <String> }` | `{ id: <Number> }` [See example](#post_project) |
@@ -90,6 +92,61 @@ Sample Response:
   projects_id: 91,
   created_at: '2020-02-05T01:49:59.421Z',
   updated_at: '2020-02-05T01:49:59.421Z' }`
+
+### <a name="all_palettes_total"></a> GET all palettes (total, any project)
+Path: `/api/v1/palettes`
+Sample Response:
+`{ palettes:
+   [ { id: 6384,
+       name: 'Sample Palette one',
+       color_one: '#F7D951',
+       color_two: '#75B1FF',
+       color_three: '#985EEE',
+       color_four: '#5ED49B',
+       color_five: '#44638F',
+       projects_id: 3230,
+       created_at: 2020-02-08T00:59:46.352Z,
+       updated_at: 2020-02-08T00:59:46.352Z },
+     { id: 6385,
+       name: 'Sample Palette',
+       color_one: '#DC5551',
+       color_two: '#F2AD00',
+       color_three: '#6CA131',
+       color_four: '#4B5DC6',
+       color_five: '#1F0E95',
+       projects_id: 3231,
+       created_at: 2020-02-08T00:59:46.352Z,
+       updated_at: 2020-02-08T00:59:46.352Z } ] }`
+
+### <a name="all_palettes_by_query"></a> GET all palettes that match query (total, any project)
+Path: `/api/v1/palettes?color=:hexcharacters`
+Sample Query Format:
+Hex characters must be 6 digits. Digits/letters only - do not include "#".
+`/api/v1/palettes?color=FFFFFF`
+Sample Response:
+`{ palettes:
+  [ { id: 6384,
+    name: 'new palette one',
+    color_one: '#F7D951',
+    color_two: '#FFFFFF',
+    color_three: '#985EEE',
+    color_four: '#5ED49B',
+    color_five: '#44638F',
+    projects_id: 3230,
+    created_at: 2020-02-08T00:59:46.352Z,
+    updated_at: 2020-02-08T00:59:46.352Z
+  };
+  { id: 6385,
+    name: 'new palette two',
+    color_one: '#DC5551',
+    color_two: '#F2AD00',
+    color_three: '#6CA131',
+    color_four: '#4B5DC6',
+    color_five: '#FFFFFF',
+    projects_id: 3231,
+    created_at: 2020-02-08T00:59:46.352Z,
+    updated_at: 2020-02-08T00:59:46.352Z
+  } ] }`
 
 ### <a name="post_project"></a> POST a project
 Path: `/api/v1/projects`
