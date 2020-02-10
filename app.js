@@ -165,10 +165,8 @@ app.patch('/api/v1/palettes/:id', async (request, response) => {
   let requestKeys = Object.keys(updatedInfo);
 
   if (requestKeys.length !== 1 || requestKeys[0] !== 'name') {
-    return response
-      .status(422)
-      .send({ error:
-        `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
+    return response.status(422).json({ error:
+      `Expected body format is: { name: <String> }. You must send only the required "name" property.` })
   }
   try {
     if (foundPalette.length) {
@@ -185,7 +183,40 @@ app.patch('/api/v1/palettes/:id', async (request, response) => {
   }
 });
 
-// custom endpoint
+// Custom Endpoint
+// api/v1/palettes?color=FFFFFF
 
+app.get('/api/v1/palettes', async (request, response) => {
+  const color = request.param('color');
+  let palettes;
+  if (!color) {
+    palettes = await database('palettes').select();
+  } else {
+    if (!validateColorQuery(color)) {
+      response.status(422).json({ error:
+        'Expected query format is: "?color=" + <6 character hex code>.  Do not include "#" before the hex characters.'
+      })
+    }
+    palettes = await database('palettes').where(function() {
+      this.where('color_one', `#${color}`).orWhere('color_two', `#${color}`)
+        .orWhere('color_three', `#${color}`).orWhere('color_four', `#${color}`)
+        .orWhere('color_five', `#${color}`)
+    });
+  }
+    try {
+    response.status(200).json({palettes});
+  } catch (error) {
+    response.status(500).json({error});
+  }
+});
+
+const validateColorQuery = (color) => {
+  let regex = /[a-z\d][a-z\d][a-z\d][a-z\d][a-z\d][a-z\d]/ig;
+  if (color.length === 6 && regex.test(color)) {
+    return true;
+  } else {
+    return false;
+  }
+};
 
 module.exports = app;
