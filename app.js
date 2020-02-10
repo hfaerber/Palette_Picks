@@ -211,7 +211,7 @@ app.get('/api/v1/palettes', async (request, response) => {
 });
 
 const validateColorQuery = (color) => {
-  let regex = /[a-z\d][a-z\d][a-z\d][a-z\d][a-z\d][a-z\d]/ig;
+  let regex = /[0-9a-zA-Z]{6,}/;
   if (color.length === 6 && regex.test(color)) {
     return true;
   } else {
